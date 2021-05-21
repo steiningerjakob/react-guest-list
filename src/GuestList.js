@@ -1,24 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-export default function GuestList({ guestList, setGuestList }) {
-  // API URL
-  const baseUrl = 'http://localhost:5000';
+export default function GuestList({
+  allGuests,
+  setAllGuests,
+  userIsStale,
+  setUserIsStale,
+  baseUrl,
+}) {
+  function clearGuestList() {
+    allGuests.length = 0;
+    setAllGuests(allGuests);
+    return allGuests;
+  }
 
-  const [userIsStale, setUserIsStale] = useState(true);
-
-  // fetch guest list from baseURL
   useEffect(() => {
-    async function fetchGuestList() {
+    async function fetchGuests() {
       const response = await fetch(`${baseUrl}/`);
-      const allGuests = await response.json();
-      setGuestList(allGuests);
-
+      setAllGuests(await response.json());
+      console.log(allGuests);
       setUserIsStale(false);
     }
-    if (userIsStale) fetchGuestList();
+    if (userIsStale) fetchGuests();
   }, [userIsStale]);
 
-  if (!guestList?.results) {
+  if (allGuests === undefined) {
     return <>Loading...</>;
   }
+
+  return (
+    <div>
+      <h1>Guest List</h1>
+      <ul>
+        {allGuests.map((guest) => {
+          return (
+            <li key={guest.id}>
+              {`Guest ${guest.id}: ${guest.firstName} ${guest.lastName} - ${guest.attending}`}
+              <button>Remove guest [work in progress]</button>
+            </li>
+          );
+        })}
+      </ul>
+      <button onClick={clearGuestList}>
+        Clear guest list [work in progress]
+      </button>
+    </div>
+  );
 }

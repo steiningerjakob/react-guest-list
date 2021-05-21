@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { useState } from 'react';
 
 // Style element via CSS-in-JS
 const divStyles = css`
@@ -18,11 +17,7 @@ const inputStyles = css`
   background-color: lightyellow;
   text-align: center;
 `;
-// const baseUrl = 'http://localhost:5000';
-let guestID = 0;
 
-// Capture user input on top & bottom text and image, and change variable state accordingly
-// Pass state to other components via destructured props
 function UserInputs({
   firstNameInput,
   setFirstNameInput,
@@ -30,22 +25,38 @@ function UserInputs({
   setLastNameInput,
   attendanceInput,
   setAttendanceInput,
+  setUserIsStale,
 }) {
-  const [allGuests, setAllGuests] = useState([]);
+  async function createNewGuest() {
+    const response = await fetch('http://localhost:5000/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstName: firstNameInput,
+        lastName: lastNameInput,
+      }),
+    });
+    const createdGuest = await response.json();
+    console.log(createdGuest);
+  }
 
   function submitInput() {
     setFirstNameInput(firstNameInput);
     setLastNameInput(lastNameInput);
     setAttendanceInput(attendanceInput);
-    const newAllGuests = allGuests.concat({
-      id: guestID,
-      firstName: firstNameInput,
-      lastName: lastNameInput,
-      attending: attendanceInput,
-    });
-    guestID = guestID + 1;
-    setAllGuests(newAllGuests);
+    setUserIsStale(true);
+    createNewGuest();
   }
+
+  // // currently not working
+  // function removeGuest() {
+  //   const fewerGuests = newAllGuests.splice(newAllGuests.id - 1, 1);
+  //   console.log(`new`, newAllGuests.id);
+  //   setAllGuests(fewerGuests);
+  //   return allGuests;
+  // }
 
   return (
     <>
@@ -81,28 +92,7 @@ function UserInputs({
         <br />
       </div>
       <div>
-        <button onClick={submitInput}>Submit</button>
-      </div>
-      <div>
-        {allGuests.map((guest) => {
-          return (
-            <p key={`Guest-${guest.id}`}>
-              {`Guest ${guest.id}: ${guest.firstName} ${guest.lastName}`}
-              <label htmlFor="attendance">
-                <span>..............</span>Attending:
-                <input
-                  type="checkbox"
-                  value={setAttendanceInput}
-                  defaultChecked={true}
-                  onChange={(event) => {
-                    setAttendanceInput(event.currentTarget.value);
-                  }}
-                />
-              </label>
-              <button>Remove guest</button>
-            </p>
-          );
-        })}
+        <button onClick={submitInput}>Add guest</button>
       </div>
     </>
   );

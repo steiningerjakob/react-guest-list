@@ -8,6 +8,10 @@ function App() {
   const [firstNameInput, setFirstNameInput] = useState(null);
   const [lastNameInput, setLastNameInput] = useState(null);
   const [attendanceInput, setAttendanceInput] = useState(false);
+  const [allGuests, setAllGuests] = useState([]);
+  const [userIsStale, setUserIsStale] = useState(true);
+
+  const baseUrl = 'http://localhost:5000';
 
   return (
     <>
@@ -27,8 +31,16 @@ function App() {
           setLastNameInput={setLastNameInput}
           attendanceInput={attendanceInput}
           setAttendanceInput={setAttendanceInput}
+          setUserIsStale={setUserIsStale}
         />
-        {/* <GuestList /> */}
+        <br />
+        <GuestList
+          allGuests={allGuests}
+          setAllGuests={setAllGuests}
+          userIsStale={userIsStale}
+          setUserIsStale={setUserIsStale}
+          baseUrl={baseUrl}
+        />
       </body>
     </>
   );
