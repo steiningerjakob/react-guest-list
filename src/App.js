@@ -7,7 +7,7 @@ function App() {
   // declare state variables
   const [firstNameInput, setFirstNameInput] = useState(null);
   const [lastNameInput, setLastNameInput] = useState(null);
-  const [attendanceInput, setAttendanceInput] = useState(false);
+
   const [allGuests, setAllGuests] = useState([]);
   const [userIsStale, setUserIsStale] = useState(true);
 
@@ -29,9 +29,9 @@ function App() {
           lastNameInput={lastNameInput}
           setFirstNameInput={setFirstNameInput}
           setLastNameInput={setLastNameInput}
-          attendanceInput={attendanceInput}
-          setAttendanceInput={setAttendanceInput}
+          userIsStale={userIsStale}
           setUserIsStale={setUserIsStale}
+          allGuests={allGuests}
         />
         <br />
         <GuestList
@@ -41,6 +41,7 @@ function App() {
           setUserIsStale={setUserIsStale}
           baseUrl={baseUrl}
         />
+        <br />
       </body>
     </>
   );

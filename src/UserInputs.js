@@ -23,9 +23,9 @@ function UserInputs({
   setFirstNameInput,
   lastNameInput,
   setLastNameInput,
-  attendanceInput,
-  setAttendanceInput,
+  userIsStale,
   setUserIsStale,
+  allGuests,
 }) {
   async function createNewGuest() {
     const response = await fetch('http://localhost:5000/', {
@@ -45,57 +45,52 @@ function UserInputs({
   function submitInput() {
     setFirstNameInput(firstNameInput);
     setLastNameInput(lastNameInput);
-    setAttendanceInput(attendanceInput);
-    setUserIsStale(true);
+    setUserIsStale(!userIsStale);
     createNewGuest();
   }
 
-  // // currently not working
-  // function removeGuest() {
-  //   const fewerGuests = newAllGuests.splice(newAllGuests.id - 1, 1);
-  //   console.log(`new`, newAllGuests.id);
-  //   setAllGuests(fewerGuests);
-  //   return allGuests;
-  // }
+  if (allGuests === undefined) {
+    return <>Fetching guest list...</>;
+  } else {
+    return (
+      <>
+        <div css={divStyles}>
+          <label htmlFor="firstName">
+            First name:
+            <br />
+            <input
+              id="firstName"
+              placeholder="Jane"
+              value={firstNameInput}
+              onChange={(event) => {
+                setFirstNameInput(event.currentTarget.value);
+              }}
+              css={inputStyles}
+            />
+            <br />
+          </label>
 
-  return (
-    <>
-      <div css={divStyles}>
-        <label htmlFor="firstName">
-          First name:
+          <label htmlFor="lastName">
+            Last name:
+            <br />
+            <input
+              id="lastName"
+              placeholder="Doe"
+              value={lastNameInput}
+              onChange={(event) => {
+                setLastNameInput(event.currentTarget.value);
+              }}
+              css={inputStyles}
+            />
+          </label>
           <br />
-          <input
-            id="firstName"
-            placeholder="Jane"
-            value={firstNameInput}
-            onChange={(event) => {
-              setFirstNameInput(event.currentTarget.value);
-            }}
-            css={inputStyles}
-          />
-          <br />
-        </label>
-
-        <label htmlFor="lastName">
-          Last name:
-          <br />
-          <input
-            id="lastName"
-            placeholder="Doe"
-            value={lastNameInput}
-            onChange={(event) => {
-              setLastNameInput(event.currentTarget.value);
-            }}
-            css={inputStyles}
-          />
-        </label>
-        <br />
-      </div>
-      <div>
-        <button onClick={submitInput}>Add guest</button>
-      </div>
-    </>
-  );
+        </div>
+        <div>
+          <button onClick={submitInput}>Add guest</button>
+        </div>
+      </>
+    );
+  }
 }
 
 export default UserInputs;
