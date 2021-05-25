@@ -7,7 +7,6 @@ function App() {
   // declare state variables
   const [firstNameInput, setFirstNameInput] = useState(null);
   const [lastNameInput, setLastNameInput] = useState(null);
-
   const [allGuests, setAllGuests] = useState([]);
   const [userIsStale, setUserIsStale] = useState(true);
 
@@ -34,6 +33,7 @@ function App() {
           allGuests={allGuests}
         />
         <br />
+        <h1>Guest List</h1>
         <GuestList
           allGuests={allGuests}
           setAllGuests={setAllGuests}

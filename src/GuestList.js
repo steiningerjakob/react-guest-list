@@ -9,13 +9,14 @@ export default function GuestList({
 }) {
   const [editingId, setEditingId] = useState(null);
   const [newName, setNewName] = useState();
-  const [filter, setFilter] = useState('All');
+  const [filteredGuests, setFilteredGuests] = useState(allGuests);
 
   useEffect(() => {
     async function fetchGuests() {
       const response = await fetch(`${baseUrl}/`);
-      setAllGuests(await response.json());
-      console.log(allGuests);
+      const data = await response.json();
+      setAllGuests(data);
+      setFilteredGuests(data);
       setUserIsStale(!userIsStale);
     }
     if (userIsStale) fetchGuests();
@@ -40,6 +41,25 @@ export default function GuestList({
     setEditingId(null);
   }
 
+  // filter event handlers for buttons
+  // change from attending to non-attending not working
+
+  function filterAttendingGuests() {
+    setFilteredGuests(
+      filteredGuests.filter((guest) => guest.attending === true),
+    );
+  }
+
+  function filterNotAttendingGuests() {
+    setFilteredGuests(
+      filteredGuests.filter((guest) => guest.attending === false),
+    );
+  }
+
+  function resetToAllGuests() {
+    setFilteredGuests(allGuests);
+  }
+
   // map over original array and delete all elements - see also:
   // https://dev.to/askrishnapravin/for-loop-vs-map-for-making-multiple-api-calls-3lhd
   async function clearGuestList() {
@@ -53,38 +73,11 @@ export default function GuestList({
     setUserIsStale(!userIsStale);
   }
 
-  // filter event handlers - not yet working
-
-  function filterAttending() {
-    setFilter('Attending');
-    const attendingGuests = allGuests.filter(
-      (guest) => guest.attending === true,
-    );
-    setAllGuests(attendingGuests);
-    setUserIsStale(!userIsStale);
-  }
-
-  function filterNotAttending() {
-    setFilter('Not Attending');
-    const notAttendingGuests = allGuests.filter(
-      (guest) => guest.attending === false,
-    );
-    setAllGuests(notAttendingGuests);
-    setUserIsStale(!userIsStale);
-  }
-
-  function filterAllGuests() {
-    setFilter('All');
-    setAllGuests(allGuests);
-    setUserIsStale(!userIsStale);
-  }
-
   return (
     <div>
-      <h1>Guest List</h1>
       <div>
         <ul>
-          {allGuests.map((guest) => {
+          {filteredGuests.map((guest) => {
             return (
               <li key={guest.id}>
                 {editingId === guest.id ? (
@@ -156,9 +149,9 @@ export default function GuestList({
         ) : (
           <>
             <br />
-            <button onClick={filterAttending}>Attending</button>
-            <button onClick={filterNotAttending}>Not attending</button>
-            <button onClick={filterAllGuests}>Show all guests</button>
+            <button onClick={filterAttendingGuests}>Attending</button>
+            <button onClick={filterNotAttendingGuests}>Not attending</button>
+            <button onClick={resetToAllGuests}>Show all guests</button>
             <br />
             <br />
             <button onClick={clearGuestList}>Clear guest list</button>
