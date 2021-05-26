@@ -8,6 +8,7 @@ import UserInputs from './UserInputs';
 const headerStyles = css`
   justify-content: center;
   margin-bottom: 15px;
+  background-color: #c0c0c0;
 `;
 
 const userInputSection = css`
@@ -18,7 +19,7 @@ const userInputSection = css`
   justify-content: top;
   align-items: center;
   margin-left: 15px;
-  margin-right: 115px;
+  margin-right: 140px;
   background-color: #fafafa;
 `;
 
