@@ -71,29 +71,31 @@ function UserInputs({
   } else {
     return (
       <div css={divStyles}>
-        <input
-          id="firstName"
-          placeholder="First name"
-          value={firstNameInput}
-          onChange={(event) => {
-            setFirstNameInput(event.currentTarget.value);
-          }}
-          css={inputStyles}
-        />
-        <input
-          id="lastName"
-          placeholder="Last name"
-          value={lastNameInput}
-          onChange={(event) => {
-            setLastNameInput(event.currentTarget.value);
-          }}
-          css={inputStyles}
-        />
-        <button onClick={submitInput} css={addButton}>
-          <span role="img" aria-label="add">
-            ➡️
-          </span>
-        </button>
+        <form>
+          <input
+            id="firstName"
+            placeholder="First name"
+            value={firstNameInput}
+            onChange={(event) => {
+              setFirstNameInput(event.currentTarget.value);
+            }}
+            css={inputStyles}
+          />
+          <input
+            id="lastName"
+            placeholder="Last name"
+            value={lastNameInput}
+            onChange={(event) => {
+              setLastNameInput(event.currentTarget.value);
+            }}
+            css={inputStyles}
+          />
+          <button onClick={submitInput} css={addButton}>
+            <span role="img" aria-label="add">
+              ➡️
+            </span>
+          </button>
+        </form>
       </div>
     );
   }

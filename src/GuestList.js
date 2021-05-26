@@ -1,6 +1,3 @@
-// ToDo:
-// - make input field into forms so that change on enter works
-
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
@@ -151,7 +148,7 @@ export default function GuestList({
             return (
               <p key={guest.id} css={guestContainer}>
                 {editingId === guest.id ? (
-                  <>
+                  <form>
                     <input
                       value={newName}
                       onChange={(event) =>
@@ -169,7 +166,7 @@ export default function GuestList({
                         🔄
                       </span>
                     </button>
-                  </>
+                  </form>
                 ) : (
                   <div>
                     <button
