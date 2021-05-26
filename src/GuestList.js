@@ -1,6 +1,5 @@
-// ToDo's:
-// - give buttons on bottom conditional formatting (see example)
-// - maybe put entry fields elsewhere?
+// ToDo:
+// - make input field into forms so that change on enter works
 
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
@@ -70,6 +69,7 @@ const radioButton = css`
   background-color: white;
   border: 1px solid #dcdcdc;
   margin-left: 30px;
+  margin-right: 8px;
 
   :hover {
     transform: scale(1.5);
@@ -85,16 +85,13 @@ export default function GuestList({
 }) {
   const [editingId, setEditingId] = useState(null);
   const [newName, setNewName] = useState();
-  const [filteredGuests, setFilteredGuests] = useState(allGuests);
-  // Trying to derive state - not yet working
-  // let filterNew = [...allGuests];
+  const [guestFilter, setGuestFilter] = useState('Show all guests');
 
   useEffect(() => {
     async function fetchGuests() {
       const response = await fetch(`${baseUrl}/`);
-      const data = await response.json();
-      setAllGuests(data);
-      setFilteredGuests(data);
+      const guests = await response.json();
+      setAllGuests(guests);
       setUserIsStale(!userIsStale);
     }
     if (userIsStale) fetchGuests();
@@ -119,31 +116,6 @@ export default function GuestList({
     setEditingId(null);
   }
 
-  // filter event handlers for radio buttons
-
-  function filterGuests(event) {
-    if (event.target.value === 'Attending') {
-      setFilteredGuests(allGuests.filter((guest) => guest.attending === true));
-    } else if (event.target.value === 'Not attending') {
-      setFilteredGuests(allGuests.filter((guest) => guest.attending === false));
-    } else {
-      setFilteredGuests(allGuests);
-    }
-  }
-
-  // Trying to derive state - not yet working
-
-  // function filterGuestsNew(event) {
-  //   if (event.target.value === 'Attending') {
-  //     filterNew = allGuests.filter((guest) => guest.attending === true);
-  //   } else if (event.target.value === 'Not attending') {
-  //     filterNew = allGuests.filter((guest) => guest.attending === false);
-  //   } else {
-  //     filterNew = [...allGuests];
-  //   }
-  //   return filterNew;
-  // }
-
   // map over original array and delete all elements - see also:
   // https://dev.to/askrishnapravin/for-loop-vs-map-for-making-multiple-api-calls-3lhd
   async function clearGuestList() {
@@ -160,86 +132,109 @@ export default function GuestList({
   return (
     <div css={guestListSection}>
       <div css={guestListContainer}>
-        {filteredGuests.map((guest) => {
-          return (
-            <p key={guest.id} css={guestContainer}>
-              {editingId === guest.id ? (
-                <>
-                  <input
-                    value={newName}
-                    onChange={(event) => setNewName(event.currentTarget.value)}
-                  />
-                  <button
-                    onClick={() => {
-                      setNewName(newName);
-                      updateGuestName(guest);
-                    }}
-                    css={attendanceButton}
-                  >
-                    <span role="img" aria-label="update">
-                      🔄
-                    </span>
-                  </button>
-                </>
-              ) : (
-                <div>
-                  <button
-                    onClick={async () => {
-                      await fetch(`http://localhost:5000/${guest.id}`, {
-                        method: 'PATCH',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          attending: !guest.attending,
-                        }),
-                      });
-                      setUserIsStale(!userIsStale);
-                    }}
-                    css={attendanceButton}
-                  >
-                    {guest.attending === true ? (
-                      <span role="img" aria-label="checkmark">
-                        ✅
+        {allGuests
+          .filter((guest) => {
+            if (guestFilter === 'Show all guests') {
+              return true;
+            } else if (guestFilter === 'Attending') {
+              if (guest.attending === true) {
+                return true;
+              }
+            } else if (guestFilter === 'Not attending') {
+              if (guest.attending === false) {
+                return true;
+              }
+            }
+            return false;
+          })
+          .map((guest) => {
+            return (
+              <p key={guest.id} css={guestContainer}>
+                {editingId === guest.id ? (
+                  <>
+                    <input
+                      value={newName}
+                      onChange={(event) =>
+                        setNewName(event.currentTarget.value)
+                      }
+                    />
+                    <button
+                      onClick={() => {
+                        setNewName(newName);
+                        updateGuestName(guest);
+                      }}
+                      css={attendanceButton}
+                    >
+                      <span role="img" aria-label="update">
+                        🔄
                       </span>
-                    ) : (
-                      <span role="img" aria-label="cross mark">
-                        ❌
-                      </span>
-                    )}
-                  </button>
-                  <span className={guest.attending.toString()}>
-                    {guest.firstName} {guest.lastName}
-                  </span>
-                  <button
-                    onClick={() => {
-                      setEditingId(guest.id);
-                      setNewName(`${guest.firstName} ${guest.lastName}`);
-                    }}
-                    css={editButton}
-                  >
-                    <span role="img" aria-label="edit">
-                      ✏️
+                    </button>
+                  </>
+                ) : (
+                  <div>
+                    <button
+                      onClick={async () => {
+                        await fetch(`http://localhost:5000/${guest.id}`, {
+                          method: 'PATCH',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            attending: !guest.attending,
+                          }),
+                        });
+                        setUserIsStale(!userIsStale);
+                      }}
+                      css={attendanceButton}
+                    >
+                      {guest.attending === true ? (
+                        <span role="img" aria-label="checkmark">
+                          ✅
+                        </span>
+                      ) : (
+                        <span role="img" aria-label="cross mark">
+                          ❌
+                        </span>
+                      )}
+                    </button>
+                    <span
+                      className={
+                        guest.attending === undefined
+                          ? 'true'
+                          : guest.attending.toString()
+                      }
+                    >
+                      {guest.firstName} {guest.lastName}
                     </span>
-                  </button>
-                </div>
-              )}
-              <button
-                onClick={async () => {
-                  await fetch(`http://localhost:5000/${guest.id}`, {
-                    method: 'DELETE',
-                  });
-                  setUserIsStale(!userIsStale);
-                }}
-                css={removerButton}
-              >
-                <span role="img" aria-label="crossed out">
-                  🗑️
-                </span>{' '}
-              </button>
-            </p>
-          );
-        })}
+                    <button
+                      onClick={() => {
+                        setEditingId(guest.id);
+                        setNewName(`${guest.firstName} ${guest.lastName}`);
+                      }}
+                      css={editButton}
+                    >
+                      <span role="img" aria-label="edit">
+                        ✏️
+                      </span>
+                    </button>
+                  </div>
+                )}
+                <button
+                  onClick={async () => {
+                    await fetch(`http://localhost:5000/${guest.id}`, {
+                      method: 'DELETE',
+                    });
+                    setUserIsStale(!userIsStale);
+                  }}
+                  css={removerButton}
+                >
+                  <span role="img" aria-label="crossed out">
+                    🗑️
+                  </span>{' '}
+                </button>
+              </p>
+            );
+          })}
       </div>
       <br />
       <div>
@@ -248,25 +243,34 @@ export default function GuestList({
         ) : (
           <>
             <br />
-            <div onChange={filterGuests}>
+            <div>
               <input
                 type="radio"
-                name="filter"
                 value="Attending"
+                name="filter"
+                onChange={(event) => {
+                  setGuestFilter(event.currentTarget.value);
+                }}
                 css={radioButton}
               />
               Attending
               <input
                 type="radio"
-                name="filter"
                 value="Not attending"
+                name="filter"
+                onChange={(event) => {
+                  setGuestFilter(event.currentTarget.value);
+                }}
                 css={radioButton}
               />
               Not attending
               <input
                 type="radio"
+                value="Show all guests"
                 name="filter"
-                value="All"
+                onChange={(event) => {
+                  setGuestFilter(event.currentTarget.value);
+                }}
                 defaultChecked
                 css={radioButton}
               />

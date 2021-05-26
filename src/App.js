@@ -7,20 +7,22 @@ import UserInputs from './UserInputs';
 
 const headerStyles = css`
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   background-color: #c0c0c0;
+  border-radius: 2px;
 `;
 
 const userInputSection = css`
-  min-width: 350px;
-  min-height: 500px;
+  width: 350px;
+  height: 550px;
   display: flex;
   flex-direction: column;
   justify-content: top;
   align-items: center;
-  margin-left: 15px;
+  margin-left: 20px;
   margin-right: 140px;
   background-color: #fafafa;
+  border-radius: 10px;
 `;
 
 function App() {
