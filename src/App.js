@@ -1,7 +1,26 @@
 import './App.css';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import { useState } from 'react';
 import GuestList from './GuestList';
 import UserInputs from './UserInputs';
+
+const headerStyles = css`
+  justify-content: center;
+  margin-bottom: 15px;
+`;
+
+const userInputSection = css`
+  min-width: 350px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: top;
+  align-items: center;
+  margin-left: 15px;
+  margin-right: 115px;
+  background-color: #fafafa;
+`;
 
 function App() {
   // declare state variables
@@ -14,7 +33,7 @@ function App() {
 
   return (
     <>
-      <header className="App">
+      <header className="App" css={headerStyles}>
         <h1>
           <span role="img" aria-label="waving hand">
             👋
@@ -23,24 +42,28 @@ function App() {
         </h1>
       </header>
       <body className="App">
-        <UserInputs
-          firstNameInput={firstNameInput}
-          lastNameInput={lastNameInput}
-          setFirstNameInput={setFirstNameInput}
-          setLastNameInput={setLastNameInput}
-          userIsStale={userIsStale}
-          setUserIsStale={setUserIsStale}
-          allGuests={allGuests}
-        />
-        <br />
-        <h1>Guest List</h1>
-        <GuestList
-          allGuests={allGuests}
-          setAllGuests={setAllGuests}
-          userIsStale={userIsStale}
-          setUserIsStale={setUserIsStale}
-          baseUrl={baseUrl}
-        />
+        <section css={userInputSection}>
+          <h1>Add new guest</h1>
+          <UserInputs
+            firstNameInput={firstNameInput}
+            lastNameInput={lastNameInput}
+            setFirstNameInput={setFirstNameInput}
+            setLastNameInput={setLastNameInput}
+            userIsStale={userIsStale}
+            setUserIsStale={setUserIsStale}
+            allGuests={allGuests}
+          />
+        </section>
+        <section>
+          <h1>Guest List</h1>
+          <GuestList
+            allGuests={allGuests}
+            setAllGuests={setAllGuests}
+            userIsStale={userIsStale}
+            setUserIsStale={setUserIsStale}
+            baseUrl={baseUrl}
+          />
+        </section>
         <br />
       </body>
     </>
