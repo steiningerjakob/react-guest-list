@@ -99,7 +99,7 @@ export default function GuestList({
   }
 
   async function updateGuestName(guest) {
-    await fetch(`http://localhost:5000/${guest.id}`, {
+    await fetch(`https://jst-react-guest-list.herokuapp.com/${guest.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export default function GuestList({
   async function clearGuestList() {
     setAllGuests(
       allGuests.map(async (guest) => {
-        await fetch(`http://localhost:5000/${guest.id}`, {
+        await fetch(`https://jst-react-guest-list.herokuapp.com/${guest.id}`, {
           method: 'DELETE',
         });
       }),
@@ -171,15 +171,18 @@ export default function GuestList({
                   <div>
                     <button
                       onClick={async () => {
-                        await fetch(`http://localhost:5000/${guest.id}`, {
-                          method: 'PATCH',
-                          headers: {
-                            'Content-Type': 'application/json',
+                        await fetch(
+                          `https://jst-react-guest-list.herokuapp.com/${guest.id}`,
+                          {
+                            method: 'PATCH',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              attending: !guest.attending,
+                            }),
                           },
-                          body: JSON.stringify({
-                            attending: !guest.attending,
-                          }),
-                        });
+                        );
                         setUserIsStale(!userIsStale);
                       }}
                       css={attendanceButton}
@@ -218,9 +221,12 @@ export default function GuestList({
                 )}
                 <button
                   onClick={async () => {
-                    await fetch(`http://localhost:5000/${guest.id}`, {
-                      method: 'DELETE',
-                    });
+                    await fetch(
+                      `https://jst-react-guest-list.herokuapp.com/${guest.id}`,
+                      {
+                        method: 'DELETE',
+                      },
+                    );
                     setUserIsStale(!userIsStale);
                   }}
                   css={removerButton}

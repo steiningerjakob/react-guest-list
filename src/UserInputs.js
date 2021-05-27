@@ -45,16 +45,19 @@ function UserInputs({
   allGuests,
 }) {
   async function createNewGuest() {
-    const response = await fetch('http://localhost:5000/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      'https://jst-react-guest-list.herokuapp.com/',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: firstNameInput,
+          lastName: lastNameInput,
+        }),
       },
-      body: JSON.stringify({
-        firstName: firstNameInput,
-        lastName: lastNameInput,
-      }),
-    });
+    );
     const createdGuest = await response.json();
     console.log(createdGuest);
   }
@@ -71,7 +74,7 @@ function UserInputs({
   } else {
     return (
       <div css={divStyles}>
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <input
             id="firstName"
             placeholder="First name"

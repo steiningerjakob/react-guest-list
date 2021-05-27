@@ -32,7 +32,7 @@ function App() {
   const [allGuests, setAllGuests] = useState([]);
   const [userIsStale, setUserIsStale] = useState(true);
 
-  const baseUrl = 'http://localhost:5000';
+  const baseUrl = 'https://jst-react-guest-list.herokuapp.com';
 
   return (
     <>
