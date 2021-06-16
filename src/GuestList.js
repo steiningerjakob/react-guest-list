@@ -109,6 +109,8 @@ export default function GuestList({
         lastName: newName.split(' ')[1],
       }),
     });
+    // NOTE TO MYSELF to address Jose feedback:
+    // the setUserIsStale may need to be removed
     setUserIsStale(!userIsStale);
     setEditingId(null);
   }
