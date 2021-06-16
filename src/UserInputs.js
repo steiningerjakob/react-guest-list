@@ -45,21 +45,16 @@ function UserInputs({
   allGuests,
 }) {
   async function createNewGuest() {
-    const response = await fetch(
-      'https://jst-react-guest-list.herokuapp.com/',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: firstNameInput,
-          lastName: lastNameInput,
-        }),
+    await fetch('https://jst-react-guest-list.herokuapp.com/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
-    const createdGuest = await response.json();
-    console.log(createdGuest);
+      body: JSON.stringify({
+        firstName: firstNameInput,
+        lastName: lastNameInput,
+      }),
+    });
   }
 
   function submitInput() {

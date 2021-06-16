@@ -116,13 +116,11 @@ export default function GuestList({
   // map over original array and delete all elements - see also:
   // https://dev.to/askrishnapravin/for-loop-vs-map-for-making-multiple-api-calls-3lhd
   async function clearGuestList() {
-    setAllGuests(
-      allGuests.map(async (guest) => {
-        await fetch(`https://jst-react-guest-list.herokuapp.com/${guest.id}`, {
-          method: 'DELETE',
-        });
-      }),
-    );
+    allGuests.forEach(async (guest) => {
+      await fetch(`https://jst-react-guest-list.herokuapp.com/${guest.id}`, {
+        method: 'DELETE',
+      });
+    });
     setUserIsStale(!userIsStale);
   }
 
@@ -146,7 +144,7 @@ export default function GuestList({
           })
           .map((guest) => {
             return (
-              <p key={guest.id} css={guestContainer}>
+              <div key={guest.id} css={guestContainer}>
                 {editingId === guest.id ? (
                   <form>
                     <input
@@ -235,7 +233,7 @@ export default function GuestList({
                     🗑️
                   </span>{' '}
                 </button>
-              </p>
+              </div>
             );
           })}
       </div>

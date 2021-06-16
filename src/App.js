@@ -27,8 +27,8 @@ const userInputSection = css`
 
 function App() {
   // declare state variables
-  const [firstNameInput, setFirstNameInput] = useState(null);
-  const [lastNameInput, setLastNameInput] = useState(null);
+  const [firstNameInput, setFirstNameInput] = useState('');
+  const [lastNameInput, setLastNameInput] = useState('');
   const [allGuests, setAllGuests] = useState([]);
   const [userIsStale, setUserIsStale] = useState(true);
 
@@ -44,7 +44,7 @@ function App() {
           Welcome friend. This is my React Guest List!
         </h1>
       </header>
-      <body className="App">
+      <div className="App">
         <section css={userInputSection}>
           <h1>Add new guest</h1>
           <UserInputs
@@ -68,7 +68,7 @@ function App() {
           />
         </section>
         <br />
-      </body>
+      </div>
     </>
   );
 }
